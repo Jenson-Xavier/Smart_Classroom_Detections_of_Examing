@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="prefix">
+    <file>rsc_access.png</file>
+    <file>rsc_slider.png</file>
+    <file>rsc_check.png</file>
+    <file>rsc_manual.png</file>
+  </qresource>
+</RCC>
