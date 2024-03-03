@@ -13,6 +13,7 @@ import time
 from PyQt5.QtCore import QThread, QObject, pyqtSignal
 from PyQt5.QtWidgets import QMainWindow
 
+
 from detect_utils import *
 
 
@@ -71,11 +72,26 @@ class Ui_SplashScreen(object):
         self.label_loading.setStyleSheet("color: rgb(98, 114, 164);")
         self.label_loading.setAlignment(QtCore.Qt.AlignCenter)
         self.label_loading.setObjectName("label_loading")
+        cancel_style = """
+                        QPushButton {
+                            background-color: #e84a5f; 
+                            color: white;
+                            font: 14pt \"宋体\";
+                            border-width: 2px;
+                            border-style: outset;
+                            border-radius: 10px;
+                            padding: 5px 15px;
+                        }
+                        QPushButton:hover {
+                            background-color: #cc3547;
+                        }
+                        QPushButton:pressed {
+                            background-color: #b02a37;
+                        }
+                    """
         self.btn_cancel = QtWidgets.QPushButton(self.dropShadowFrame)
         self.btn_cancel.setGeometry(QtCore.QRect(290, 280, 111, 41))
-        self.btn_cancel.setStyleSheet("font: 14pt \"宋体\";\n"
-                                      "color: rgb(254, 121, 199);\n"
-                                      "background-color: rgb(255, 255, 255);")
+        self.btn_cancel.setStyleSheet(cancel_style)
         self.btn_cancel.setObjectName("btn_cancel")
         self.verticalLayout.addWidget(self.dropShadowFrame)
         SplashScreen.setCentralWidget(self.centralwidget)

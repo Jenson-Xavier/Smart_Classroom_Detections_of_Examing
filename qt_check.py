@@ -81,16 +81,8 @@ class Ui_MainWindow_2(object):
         self.wdt_player.setSizePolicy(sizePolicy)
         self.wdt_player.setStyleSheet("border:1px solid black;")
         self.wdt_player.setObjectName("wdt_player")
-        # self.frame = QtWidgets.QFrame(self.wdt_player)
-        # self.frame.setGeometry(QtCore.QRect(0, 0, 1185, 783))
-        # self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        # self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
-        # self.frame.setStyleSheet("border:1px solid black;")
-        # self.frame.setObjectName("frame")
-        # self.gridLayout.addWidget(self.frame, 0, 0, 16, 5)
         self.gridLayout.addWidget(self.wdt_player, 0, 0, 16, 5)
         self.text_action = QtWidgets.QTextBrowser(self.centralwidget)
-        # 设置显示异常行为的字体格式
         font = QFont("宋体")
         font.setPointSize(12)
         self.text_action.document().setDefaultFont(font)
@@ -139,16 +131,31 @@ class Ui_MainWindow_2(object):
         self.slider_dura.setOrientation(QtCore.Qt.Horizontal)
         self.slider_dura.setObjectName("slider_dura")
         self.gridLayout.addWidget(self.slider_dura, 16, 0, 2, 3)
+        down_style = """
+                QPushButton {
+                    background-color: #4caf50;
+                    font: 16pt \"宋体\";
+                    color: white;
+                    border-width: 2px;
+                    border-style: outset;
+                    border-radius: 10px;
+                    padding: 5px 15px;
+                    font-weight: bold;
+                }
+                QPushButton:hover {
+                    background-color: #388e3c; 
+                }
+                QPushButton:pressed {
+                    background-color: #2e7d32;
+                }
+            """
         self.btn_down2 = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(10)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_down2.sizePolicy().hasHeightForWidth())
         self.btn_down2.setSizePolicy(sizePolicy)
-        self.btn_down2.setStyleSheet("font: 16pt \"宋体\";\n"
-                                     "background-color: rgb(105, 248, 255);\n"
-                                     "border:1px solid black;\n"
-                                     "border-radius: 10px;")
+        self.btn_down2.setStyleSheet(down_style)
         self.btn_down2.setObjectName("btn_down2")
         self.gridLayout.addWidget(self.btn_down2, 18, 2, 1, 1)
         self.btn_down1 = QtWidgets.QPushButton(self.centralwidget)
@@ -157,39 +164,52 @@ class Ui_MainWindow_2(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_down1.sizePolicy().hasHeightForWidth())
         self.btn_down1.setSizePolicy(sizePolicy)
-        self.btn_down1.setStyleSheet("font: 16pt \"宋体\";\n"
-                                     "background-color: rgb(105, 248, 255);\n"
-                                     "border:1px solid black;\n"
-                                     "border-radius: 10px;")
+        self.btn_down1.setStyleSheet(down_style)
         self.btn_down1.setObjectName("btn_down1")
         self.gridLayout.addWidget(self.btn_down1, 18, 0, 1, 2)
+        playpause_style = """
+            QPushButton {
+                border: none; 
+                background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                                stop: 0 #fdd835, stop: 1 #ffca28); 
+                font: 12pt \"宋体\";
+                padding: 5px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                                stop: 0 #ffd34e, stop: 1 #ffab00); 
+            }
+            QPushButton:pressed {
+                background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                                stop: 0 #ffc107, stop: 1 #ffb300); 
+            }
+        """
         self.btn_play = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(2)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_play.sizePolicy().hasHeightForWidth())
         self.btn_play.setSizePolicy(sizePolicy)
-        self.btn_play.setStyleSheet("background-color: rgb(0, 76, 255);\n"
-                                    "font: 12pt \"宋体\";\n"
-                                    "border-radius: 5px;")
+        self.btn_play.setStyleSheet(playpause_style)
         self.btn_play.setObjectName("btn_play")
         self.gridLayout.addWidget(self.btn_play, 18, 3, 1, 1)
         self.lab_dura = QtWidgets.QLabel(self.centralwidget)
         self.lab_dura.setStyleSheet("border:1px solid black;\n"
+                                    "border-color: blue;\n"
                                     "font: 20pt \"宋体\";\n"
                                     "border-radius: 10px;")
         self.lab_dura.setAlignment(QtCore.Qt.AlignCenter)
         self.lab_dura.setObjectName("lab_dura")
         self.gridLayout.addWidget(self.lab_dura, 16, 3, 2, 2)
+
         self.btn_pause = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(2)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_pause.sizePolicy().hasHeightForWidth())
         self.btn_pause.setSizePolicy(sizePolicy)
-        self.btn_pause.setStyleSheet("background-color: rgb(0, 76, 255);\n"
-                                     "font: 12pt \"宋体\";\n"
-                                     "border-radius: 5px;")
+        self.btn_pause.setStyleSheet(playpause_style)
         self.btn_pause.setObjectName("btn_pause")
         self.gridLayout.addWidget(self.btn_pause, 18, 4, 1, 1)
         self.btn_exit = QtWidgets.QPushButton(self.centralwidget)
@@ -200,10 +220,24 @@ class Ui_MainWindow_2(object):
         sizePolicy.setHeightForWidth(self.btn_exit.sizePolicy().hasHeightForWidth())
         self.btn_exit.setSizePolicy(sizePolicy)
         self.btn_exit.setMinimumSize(QtCore.QSize(0, 28))
-        self.btn_exit.setStyleSheet("background-color: rgb(255, 0, 0);\n"
-                                    "font: 16pt \"宋体\";\n"
-                                    "border:1px solid black;\n"
-                                    "border-radius: 10px;")
+        exit_style = """
+                        QPushButton {
+                            background-color: #e84a5f; /* 使用深红色背景，警示性且引人注意 */
+                            color: white; /* 白色字体，与深红色背景形成高对比度，易于阅读 */
+                            font: 16pt \"宋体\";
+                            border-width: 2px;
+                            border-style: outset;
+                            border-radius: 10px;
+                            padding: 5px 15px;
+                        }
+                        QPushButton:hover {
+                            background-color: #cc3547; /* 鼠标悬停时，颜色稍浅以增强交互反馈 */
+                        }
+                        QPushButton:pressed {
+                            background-color: #b02a37; /* 按下状态，颜色更深，模拟按压效果 */
+                        }
+                    """
+        self.btn_exit.setStyleSheet(exit_style)
         self.btn_exit.setObjectName("btn_exit")
         self.gridLayout.addWidget(self.btn_exit, 16, 6, 3, 1)
         MainWindow.setCentralWidget(self.centralwidget)
