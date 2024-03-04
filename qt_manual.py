@@ -16,7 +16,8 @@ class Ui_MainWindow_1(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(850, 600)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("rsc_manual.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("rsc_manual.png"),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -125,7 +126,7 @@ class Ui_MainWindow_1(object):
                                                "style=\" font-size:12pt;\">  "
                                                "本项目完全开源，欢迎各位仁人志士参与本项目的改进和修改，使之更加完备和先进，这是项目的开源地址：</span><span style=\" "
                                                "font-size:12pt; "
-                                               "color:#0000ff;\">https://github.com/xiejunxin/OSKernel2023-DbStars"
+                                               "color:#0000ff;\">https://github.com/xiejunxin/Smart_Classroom_Detections_of_Examing"
                                                ".git</span><span style=\" font-size:12pt; color:#000000;\">，期待您的pull "
                                                "requests。</span></p>\n "
                                                "<p style=\"-qt-paragraph-type:empty; margin-top:0px; "
