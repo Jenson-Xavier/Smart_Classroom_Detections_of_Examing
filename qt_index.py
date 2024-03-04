@@ -394,6 +394,7 @@ class Index(QtWidgets.QMainWindow):
         self.out_videos = []
         self.worker = None
         self.new_window = None
+        self.manual_window = None
 
     def get_status_str(self, check1, check2, check3, check4, video_path):
         str_temp = ''
@@ -578,20 +579,20 @@ class Index(QtWidgets.QMainWindow):
                 self.worker.close()
             # 强行关闭第二个窗口
             if self.worker is not None and self.worker.new_window is not None and self.worker.new_window.isVisible():
-                self.worker.new_window.player.stop()  # 停止播放
+                self.worker.new_window.player.stop()
                 self.worker.new_window.player.setMedia(
-                    QMediaContent())  # 清除媒体内容，尝试释放文件
-                self.worker.new_window.player.setVideoOutput(None)  # 断开视频输出连接
+                    QMediaContent())
+                self.worker.new_window.player.setVideoOutput(None)
                 self.worker.new_window.close()
             if self.new_window is not None and self.new_window.isVisible():
-                self.new_window.player.stop()  # 停止播放
+                self.new_window.player.stop()
                 self.new_window.player.setMedia(
-                    QMediaContent())  # 清除媒体内容，尝试释放文件
-                self.new_window.player.setVideoOutput(None)  # 断开视频输出连接
+                    QMediaContent())
+                self.new_window.player.setVideoOutput(None)
                 self.new_window.close()
+            if self.manual_window is not None and self.manual_window.isVisible():
+                self.manual_window.close()
             self.close()
-
-            # time.sleep(1)  # 短暂延迟，给操作系统一点时间来释放文件
 
             # 尝试删除文件
             try:
