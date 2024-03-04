@@ -1,24 +1,25 @@
-from checker import *
-from CDM.CDM_utils import *
-from collections import OrderedDict
-from gcn.ActionsEstLoader import TSSTG
-from gcn.Track.Tracker import Detection, Tracker
-from gcn.fn import draw_single
-from movenet import MoveNet
-from yolov5.DetectAPI import DetectAPI
-import numpy as np
-import argparse
-import torch
-import time
-import cv2
 import os
 os.environ["TFHUB_CACHE_DIR"] = "./movenet"
+import cv2
+import time
+import torch
+import argparse
+import numpy as np
 
+from yolov5.DetectAPI import DetectAPI
 
-frame_num = 0  # 视频总帧数
-total_time = 0.0  # 视频总时长
-div = 3  # 每多少帧处理一次
+from gcn.fn import draw_single
+from gcn.Track.Tracker import Detection, Tracker
+from gcn.ActionsEstLoader import TSSTG
+from collections import OrderedDict
 
+from CDM.CDM_utils import *
+from checker import *
+from movenet import MoveNet
+
+frame_num = 0       # 视频总帧数
+total_time = 0.0    # 视频总时长
+div = 3             # 每多少帧处理一次
 
 def ResizePadding(height, width):
     desized_size = (height, width)
@@ -40,10 +41,8 @@ def ResizePadding(height, width):
         top, bottom = delta_h // 2, delta_h - (delta_h // 2)
         left, right = delta_w // 2, delta_w - (delta_w // 2)
 
-        image = cv2.copyMakeBorder(
-            image, top, bottom, left, right, cv2.BORDER_CONSTANT)
+        image = cv2.copyMakeBorder(image, top, bottom, left, right, cv2.BORDER_CONSTANT)
         return image
-
     return resizePadding
 
 
@@ -68,8 +67,7 @@ def run(use_cdm, use_bp, use_resnet, use_gcn, video_path):
     vid_name = video_path.split("/")[-1][:-4]
     TEMP_IMG_PATH = './gcn/dataset/myDataset/tmp_img.jpg'
     class_names = ["no cheat", "cheat"]
-    device = torch.device(
-        "cuda") if torch.cuda.is_available() else torch.device("cpu")
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     inp_dets = 384
     max_age = 10
     weights_vote = [0.1, 0.15, 0.25, 0.5]
@@ -83,18 +81,15 @@ def run(use_cdm, use_bp, use_resnet, use_gcn, video_path):
     save_vid_wtk = f"./video/{vid_name}_{fix}_0.mp4"
 
     # 检测模型
-    detect_model = DetectAPI()
+    detect_model = DetectAPI(device=device)
     # 骨骼点检测模型
     pose_model = MoveNet()
     # 坐标判定模型
-    cdm_model = KeypointsChecker_CDM(
-        rotor_thres=0.20, roll_thres=90, reach_thres=160)
+    cdm_model = KeypointsChecker_CDM(rotor_thres=0.20, roll_thres=90, reach_thres=160)
     # 图像分类模型 cnn
-    resnet_model = ResNetChecker(
-        device=device, weights='./weights/myResNet_34_best.pt')
+    resnet_model = ResNetChecker(device=device, weights='./weights/myResNet_34_best.pt')
     # 骨骼点分类模型 dnn
-    bp_model = KeypointsChecker_NN(
-        device=device, weights='./weights/mymodel.pth')
+    bp_model = KeypointsChecker_NN(device=device, weights='./weights/mymodel.pth')
     # gcn 时空图卷积分类
     action_model = TSSTG(weight_file="./weights/tsstg-model.pth",
                          class_names=class_names)
@@ -106,13 +101,11 @@ def run(use_cdm, use_bp, use_resnet, use_gcn, video_path):
 
     frame_rate = cap.get(5)
     frame_num = cap.get(7)
-    total_time = frame_num / frame_rate  # min
+    total_time = frame_num / frame_rate    # min
 
     codec = cv2.VideoWriter_fourcc(*'MP4V')
-    writer = cv2.VideoWriter(save_vid_wk, codec, int(
-        frame_rate / div), frameSize=(inp_dets * 2, inp_dets * 2))
-    writer_n = cv2.VideoWriter(save_vid_wtk, codec, int(
-        frame_rate / div), frameSize=(inp_dets * 2, inp_dets * 2))
+    writer = cv2.VideoWriter(save_vid_wk, codec, int(frame_rate / div), frameSize=(inp_dets * 2, inp_dets * 2))
+    writer_n = cv2.VideoWriter(save_vid_wtk, codec, int(frame_rate / div), frameSize=(inp_dets * 2, inp_dets * 2))
 
     fps_time = 0
     f = 0
@@ -143,15 +136,13 @@ def run(use_cdm, use_bp, use_resnet, use_gcn, video_path):
             bbs = np.array(detected[:, :4]).astype(int)
             confs = np.array(detected[:, 4])
             # Predict skeleton pose of each bboxs.
-            keypoints_l, bbox_scores_l, bbox_l, keypoints2_l, keypoints3_l, cut_img_l = [
-            ], [], [], [], [], []
+            keypoints_l, bbox_scores_l, bbox_l, keypoints2_l, keypoints3_l, cut_img_l = [], [], [], [], [], []
             for ib, (bb, conf) in enumerate(zip(bbs, confs)):
                 xx, yy, w, h = bb
                 x1, y1, x2, y2 = max(int(xx - w / 2), 0), max(int(yy - h / 2), 0), min(int(xx + w / 2), img_w - 1), min(
                     int(yy + h / 2), img_h - 1)
                 cut_img = frame[y1: y2, x1: x2, :].copy()
-                bb = torch.tensor(
-                    (xx - w / 2, yy - h / 2, xx + w / 2, yy + h / 2))
+                bb = torch.tensor((xx - w / 2, yy - h / 2, xx + w / 2, yy + h / 2))
                 ch, cw, _ = cut_img.shape
 
                 keypoints = pose_model.run(cut_img)[0][0]
@@ -162,12 +153,10 @@ def run(use_cdm, use_bp, use_resnet, use_gcn, video_path):
                     x, y, confidence = keypoint
                     x_pixel = int(x * ch)
                     y_pixel = int(y * cw)
-                    pos_in_img_init[ik] = torch.tensor(
-                        [bb[0] + y_pixel, bb[1] + x_pixel])
+                    pos_in_img_init[ik] = torch.tensor([bb[0] + y_pixel, bb[1] + x_pixel])
                     scores[ik] = torch.tensor([confidence])
 
-                pos_in_img = torch.cat(
-                    [pos_in_img_init[0:1], pos_in_img_init[5:]], axis=0)
+                pos_in_img = torch.cat([pos_in_img_init[0:1], pos_in_img_init[5:]], axis=0)
                 scores = torch.cat([scores[0:1], scores[5:]], axis=0)
 
                 bbox_l.append(bb)
@@ -201,16 +190,13 @@ def run(use_cdm, use_bp, use_resnet, use_gcn, video_path):
             resnet_res, bp_res, cdm_res = None, None, None
             # 图像分类
             if use_resnet:
-                resnet_res = resnet_model.run(
-                    cf_cut_img).argmax() if cf_cut_img is not None else None
+                resnet_res = resnet_model.run(cf_cut_img).argmax() if cf_cut_img is not None else None
             # 骨骼点分类
             if use_bp:
-                bp_res = bp_model.run(cf_keypoints_dnn).argmax(
-                ) if cf_keypoints_dnn is not None else None
+                bp_res = bp_model.run(cf_keypoints_dnn).argmax() if cf_keypoints_dnn is not None else None
             # 坐标判定法
             if use_cdm:
-                cdm_res, _ = cdm_model.run(
-                    cf_keypoints_cdm) if cf_keypoints_cdm is not None else None
+                cdm_res, _ = cdm_model.run(cf_keypoints_cdm) if cf_keypoints_cdm is not None else None
 
             track_id = track.track_id
             bbox = track.to_tlbr().astype(int)
@@ -263,9 +249,9 @@ def run(use_cdm, use_bp, use_resnet, use_gcn, video_path):
                 frame = cv2.putText(frame, action, (bbox[0] + 5, bbox[1] + 15), cv2.FONT_HERSHEY_COMPLEX,
                                     0.4, clr, 1)
                 frame_n = cv2.putText(frame_n, str(track_id), (center[0], center[1]), cv2.FONT_HERSHEY_COMPLEX,
-                                      0.4, (255, 0, 0), 2)
+                                    0.4, (255, 0, 0), 2)
                 frame_n = cv2.putText(frame_n, action, (bbox[0] + 5, bbox[1] + 15), cv2.FONT_HERSHEY_COMPLEX,
-                                      0.4, clr, 1)
+                                    0.4, clr, 1)
 
         # Show Frame.
         frame = cv2.resize(frame, (0, 0), fx=2., fy=2.)
@@ -274,7 +260,7 @@ def run(use_cdm, use_bp, use_resnet, use_gcn, video_path):
 
         frame_n = cv2.resize(frame_n, (0, 0), fx=2., fy=2.)
         frame_n = cv2.putText(frame_n, '%d, FPS: %f' % (f, 1.0 / (time.time() - fps_time)),
-                              (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                            (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
         # frame = frame[:, :, ::-1]
         fps_time = time.time()
 
@@ -291,7 +277,7 @@ def run(use_cdm, use_bp, use_resnet, use_gcn, video_path):
 
 # if __name__ == "__main__":
 #     cheat_ts, save_vid_wk, save_vid_wtk = run(True, True, False, True,
-#                                               './gcn/dataset/myDataset/data_videos/data_video (28).mp4')
+#         './gcn/dataset/myDataset/data_videos/data_video (28).mp4')
 #     for t in cheat_ts:
 #         print(f"{t}时刻, 疑似有人作弊")
 #     print(save_vid_wk)

@@ -73,13 +73,21 @@ class KeypointsChecker_CDM:
 
             angle_7 = calculate_angle(D_5_7, D_7_9, D_5_9)
 
-            if ((angle_7 > self.reach_thres and lhand[0] > lelbow[0] > lshldr[0])
-                    or (angle_8 > self.reach_thres and rhand[0] < relbow[0] < rshldr[0])):
+            D_6_7 = cal_Distance(rshldr[0], lelbow[0], rshldr[1], lelbow[1])
+            D_5_8 = cal_Distance(lshldr[0], relbow[0], lshldr[1], relbow[1])
+
+            angle_657 = calculate_angle(D_5_7, D_5_6, D_6_7)
+            angle_568 = calculate_angle(D_6_8, D_5_6, D_5_8)
+
+            if ((angle_7 > self.reach_thres and angle_657 > self.reach_thres and
+                 lhand[0] > lelbow[0] > lshldr[0] and angle_5 > angle_6)
+                    or (angle_8 > self.reach_thres and angle_568 > self.reach_thres
+                        and rhand[0] < relbow[0] < rshldr[0]) and angle_5 < angle_6):
                 is_reach = True
                 reach_rate = max(angle_7, angle_8) / 180
                 reach_rate = round(reach_rate, 3)
 
-        result = is_rotor | is_roll
+        result = is_roll | is_rotor | is_reach
 
         return int(result), (rotor_rate, roll_rate, reach_rate)
 

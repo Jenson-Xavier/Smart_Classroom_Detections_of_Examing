@@ -1,4 +1,4 @@
-from movenet import MoveNet
+# from movenet import MoveNet
 import numpy as np
 from torchvision import transforms, models
 import cv2
@@ -9,8 +9,7 @@ import time
 
 
 class Checker:
-    def __init__(self, a=1.0, b=0.5, c=1.0, device='cpu', resnet_weights='./weights/myResNet_best.pt',
-                 keypoints_weights='./weights/mymodel.pth') -> None:
+    def __init__(self, a=1.0, b=0.5, c=1.0, device='cpu', resnet_weights='./weights/myResNet_best.pt', keypoints_weights='./weights/mymodel.pth') -> None:
         self.a = a
         self.b = b
         self.c = c
@@ -18,12 +17,12 @@ class Checker:
         self.keypoints_checker = KeypointsChecker(device=device, weights=keypoints_weights)
 
     def run(self, img):
-        # tp = time.time()
+        #tp = time.time()
         pred1 = self.resnet_checker.run(img)
-        # print(f'Resnet: {time.time() - tp}')
-        # tp = time.time()
+        #print(f'Resnet: {time.time() - tp}')
+        #tp = time.time()
         pred2, pred3 = self.keypoints_checker.run(img)
-        # print(f'Movenet: {time.time() - tp}')
+        #print(f'Movenet: {time.time() - tp}')
         pred1 *= self.a
         pred2 *= self.b
         pred3 *= self.c
@@ -35,10 +34,10 @@ class ResNetChecker:
         self.device = device
         self.model = ResNet().to(device)
         self.transform = transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        ])
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
         self.model.load_state_dict(torch.load(weights))
         self.model.to(self.device)
         self.model.eval()
@@ -86,7 +85,7 @@ class KeypointsChecker_NN:
 
     def run(self, keypoints):
         keypoints = np.array(keypoints).flatten(order='C')
-        keypoints = keypoints[[0, 1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28, 30, 31]]
+        keypoints = keypoints[[0,1,3,4,6,7,9,10,12,13,15,16,18,19,21,22,24,25,27,28,30,31]]
         keypoints = torch.tensor(keypoints).to(self.device)
         pred = self.model(keypoints)
         return pred.detach().cpu().numpy()

@@ -20,7 +20,7 @@ import cv2
 
 class DetectAPI:
     def __init__(self,
-                 weights='./weights/yolov5m6.pt',  # model path or triton URL
+                 weights='./weights/yolov5n6.pt',  # model path or triton URL
                  data='./data/coco128.yaml',  # dataset.yaml path
                  conf_thres=0.5,  # confidence threshold
                  iou_thres=0.45,  # NMS IOU threshold

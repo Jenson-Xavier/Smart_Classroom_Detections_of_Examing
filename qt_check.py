@@ -420,10 +420,3 @@ class Check(QtWidgets.QMainWindow):
     def download2(self):
         # 不显示骨骼点
         self.save_video(self.result_video_without_skeleton)
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    w = Check(False, False, False, False, '', '', '')
-    w.show()
-    app.exec_()

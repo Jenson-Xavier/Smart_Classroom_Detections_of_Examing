@@ -199,3 +199,8 @@ def draw_prediction_on_image(
             image_from_plot, dsize=(output_image_width, output_image_height),
             interpolation=cv2.INTER_CUBIC)
     return image_from_plot
+
+
+if __name__ == "__main__":
+    mv = MoveNet()
+    print('-------')

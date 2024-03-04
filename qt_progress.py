@@ -179,7 +179,7 @@ class Worker(QObject):
         pose_model = MoveNet()
         # 坐标判定模型
         cdm_model = KeypointsChecker_CDM(
-            rotor_thres=0.20, roll_thres=90, reach_thres=160)
+            rotor_thres=0.20, roll_thres=90, reach_thres=150)
         # 图像分类模型 cnn
         resnet_model = ResNetChecker(
             device=device, weights='./weights/myResNet_34_best.pt')
@@ -241,7 +241,7 @@ class Worker(QObject):
                 confs = np.array(detected[:, 4])
                 # Predict skeleton pose of each bboxs.
                 keypoints_l, bbox_scores_l, bbox_l, keypoints2_l, keypoints3_l, cut_img_l = [
-                                                                                            ], [], [], [], [], []
+                ], [], [], [], [], []
                 for ib, (bb, conf) in enumerate(zip(bbs, confs)):
                     xx, yy, w, h = bb
                     x1, y1, x2, y2 = max(int(xx - w / 2), 0), max(int(yy - h / 2), 0), min(int(xx + w / 2),
@@ -379,9 +379,9 @@ class Worker(QObject):
 
             writer.write(frame)
             writer_n.write(frame_n)
-            # cv2.imshow('frame', frame_n)
-            # if cv2.waitKey(1) & 0xFF == ord('q'):
-            #     break
+            cv2.imshow('dealing', frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
             self.progress_signal.emit(f * 100 // frame_num)
 

@@ -612,7 +612,7 @@ class Index(QtWidgets.QMainWindow):
             self.player.pause()
         else:
             QMessageBox.warning(self, '警告', '上传的文件并非视频文件,请检查文件格式重新上传!')
-            self.video_path = ''
+            self.video_path = ""
 
     def play_video(self):
         if self.player.state() != 1:

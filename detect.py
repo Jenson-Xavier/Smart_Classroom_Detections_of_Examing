@@ -15,6 +15,7 @@ from gcn.ActionsEstLoader import TSSTG
 from CDM.CDM_utils import *
 from checker import *
 
+
 source = './gcn/dataset/myDataset/data_videos(2)/TestVideo.mp4'
 TEMP_IMG_PATH = './gcn/dataset/myDataset/tmp_img.jpg'
 class_names = ["no cheat", "cheat"]
@@ -42,7 +43,6 @@ def ResizePadding(height, width):
 
         image = cv2.copyMakeBorder(image, top, bottom, left, right, cv2.BORDER_CONSTANT)
         return image
-
     return resizePadding
 
 
@@ -66,24 +66,24 @@ def kpt2bbox(kpt, ex=20):
 if __name__ == '__main__':
     par = argparse.ArgumentParser(description='Human Fall Detection Demo.')
     par.add_argument('-C', '--camera', default=source,  # required=True,  # default=2,
-                     help='Source of camera or video file path.')
+                        help='Source of camera or video file path.')
     par.add_argument('--detection_input_size', type=int, default=384,
-                     help='Size of input in detection model in square must be divisible by 32 (int).')
+                        help='Size of input in detection model in square must be divisible by 32 (int).')
     par.add_argument('--pose_backbone', type=str, default='resnet50',
-                     help='Backbone model for SPPE FastPose model.')
+                        help='Backbone model for SPPE FastPose model.')
     par.add_argument('--show_detected', default=False, action='store_true',
-                     help='Show all bounding box from detection.')
+                        help='Show all bounding box from detection.')
     par.add_argument('--show_skeleton', default=True, action='store_true',
-                     help='Show skeleton pose.')
+                        help='Show skeleton pose.')
     par.add_argument('--save_out', type=str, default='',
-                     help='Save display to video file.')
+                        help='Save display to video file.')
     par.add_argument('--device', type=str, default='cuda',
-                     help='Device to run model on cpu or cuda.')
+                        help='Device to run model on cpu or cuda.')
     par.add_argument("--n_frames", type=int, default=10,
-                     help='Number of frames needed for prediction in gcn')
+                        help='Number of frames needed for prediction in gcn')
     par.add_argument("--weights_vote", default=[0, 0, 1.0, 0],
-                     help='Weight coefficients of four prediction models, from left to right, are'
-                          'cdm, cnn, dnn and gcn')
+                        help='Weight coefficients of four prediction models, from left to right, are'
+                             'cdm, cnn, dnn and gcn')
     args = par.parse_args()
 
     device = args.device
@@ -156,8 +156,7 @@ if __name__ == '__main__':
             keypoints_l, bbox_scores_l, bbox_l, keypoints2_l, keypoints3_l, cut_img_l = [], [], [], [], [], []
             for ib, (bb, conf) in enumerate(zip(bbs, confs)):
                 xx, yy, w, h = bb
-                x1, y1, x2, y2 = max(int(xx - w / 2), 0), max(int(yy - h / 2), 0), min(int(xx + w / 2), img_w - 1), min(
-                    int(yy + h / 2), img_h - 1)
+                x1, y1, x2, y2 = max(int(xx - w / 2), 0), max(int(yy - h / 2), 0), min(int(xx + w / 2), img_w - 1), min(int(yy + h / 2), img_h - 1)
                 cut_img = frame[y1: y2, x1: x2, :].copy()
                 bb = torch.tensor((xx - w / 2, yy - h / 2, xx + w / 2, yy + h / 2))
                 ch, cw, _ = cut_img.shape
@@ -173,6 +172,7 @@ if __name__ == '__main__':
                     pos_in_img_init[ik] = torch.tensor([bb[0] + y_pixel, bb[1] + x_pixel])
                     scores[ik] = torch.tensor([confidence])
 
+
                 pos_in_img = torch.cat([pos_in_img_init[0:1], pos_in_img_init[5:]], axis=0)
                 scores = torch.cat([scores[0:1], scores[5:]], axis=0)
 
@@ -182,6 +182,7 @@ if __name__ == '__main__':
                 keypoints2_l.append(torch.tensor(pos_in_img_init))
                 keypoints3_l.append(torch.tensor(keypoints))
                 cut_img_l.append(cut_img)
+
 
             # Create Detections object.
             detections = [Detection(kpt2bbox(keypoints_l[ips][:, :2].numpy()),
@@ -244,6 +245,7 @@ if __name__ == '__main__':
                 clr = (0, 0, 255)
             elif action_name == 'no cheat':
                 clr = (255, 200, 0)
+
 
             # VISUALIZE.
             if track.time_since_update == 0:

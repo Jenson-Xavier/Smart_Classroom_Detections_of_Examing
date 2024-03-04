@@ -8,6 +8,7 @@ from config import *
 import argparse
 import time
 
+
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 parser = argparse.ArgumentParser()
@@ -57,7 +58,7 @@ while cap.isOpened():
     ret, frame = cap.read()
     if not ret:
         break
-
+    
     if int(now * compress_ration) == prior:
         now += 1
         continue
@@ -67,15 +68,15 @@ while cap.isOpened():
 
     if prior % 2 == 0:
         stu_pos = detector.run(frame)
-
+        
     for i, det in enumerate(stu_pos):
         x, y, w, h = det
-        place = (int(x - w / 2), int(y - h / 2), int(x + w / 2), int(y + h / 2))
-        cut_img = frame[int(y - h / 2):int(y + h / 2), int(x - w / 2):int(x + w / 2), :].copy()
-
-        # tp1 = time.time()
+        place = (int(x-w/2), int(y-h/2), int(x+w/2), int(y+h/2))
+        cut_img = frame[int(y-h/2):int(y+h/2), int(x-w/2):int(x+w/2), :].copy()
+        
+        #tp1 = time.time()
         result = checker.run(cut_img)
-        # print('T2', time.time() - tp1)
+        #print('T2', time.time() - tp1)
 
         if result == 1:
             cv2.rectangle(frame, (place[0], place[1]), (place[2], place[3]), (0, 0, 255), 5)
@@ -89,7 +90,7 @@ while cap.isOpened():
         k = cv2.waitKey(1) & 0xFF
         if k == 27:
             break
-
+    
     # print('----------')
     # if now > 20:
     #     break
@@ -101,3 +102,4 @@ cv2.destroyAllWindows()
 t2 = time.time()
 print('Finish.')
 print(f'Time Cost: {t2 - t1}s')
+                 
